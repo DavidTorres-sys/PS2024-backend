@@ -1,0 +1,71 @@
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: "db"
+      POSTGRES_USER: "david"
+      POSTGRES_PASSWORD: "password"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin@example.com"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  backend-service:
+    image: backend-service
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: sbt run
+    volumes:
+      - ../:/app
+    environment:
+      DB_HOST: "db"
+      DB_PORT: "5432"
+      DB_NAME: "db"
+      DB_USER: "david"
+      DB_PASSWORD: "password"
+      PROMETHEUS_ENABLED: "true"
+    ports:
+      - "9000:9000"
+    depends_on:
+        - db
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ../prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+    depends_on:
+      - backend-service
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+    db-data:
