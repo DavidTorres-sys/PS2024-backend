@@ -6,7 +6,6 @@ The system allows for the management and visualization of road segments and thei
 such as curbs and roads. The project uses the Play Framework with Java and integrates 
 PostgreSQL as the database, utilizing JPA for persistence.
 
-
 ## Features
 - CRUD Operations: Manage road segments and their associated elements (e.g., curbs, roads).
 - Relational Data: Supports fetching associated elements when retrieving road segments.
@@ -35,6 +34,8 @@ docker-compose -f docker/Docker-compose.yml up --build
 ```
     conf/db/script.sql
 ```
+ER Model
+![DBModel.png](public/images/DBModel.png)
 
 ## Usage
 
