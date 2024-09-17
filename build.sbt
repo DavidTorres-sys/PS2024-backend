@@ -21,6 +21,7 @@ libraryDependencies ++= Seq(
     "io.micrometer" % "micrometer-registry-prometheus" % "1.13.2",
     "io.swagger.core.v3" % "swagger-core" % "2.2.8",
     "io.swagger.core.v3" % "swagger-annotations" % "2.2.8",
+    "com.typesafe.play" %% "play-filters-helpers" % "2.9.5"
 )
 
 resolvers += "Maven Central" at "https://repo1.maven.org/maven2/"
